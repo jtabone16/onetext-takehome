@@ -60,8 +60,8 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
     };
 
     const relatedReplies = flow.steps.flatMap((s: Step) =>
-        s.events.filter((event: EventType) => event.nextStepID === step.id)
-            .map((event: EventType) => ({ ...event, parentStepId: s.id }))
+        s.events?.filter((event: EventType) => event.nextStepID === step.id)
+            .map((event: EventType) => ({ ...event, parentStepId: s.id })) || []
     );
 
     useEffect(() => {
@@ -108,7 +108,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
                 />
             </div>
             <div className="replies mt-4">
-                {step.events.map((event: EventType) => (
+                {step.events?.map((event: EventType) => (
                     <ReplyForm key={event.id} event={event} stepId={step.id} scrollToStep={scrollToStep}/>
                 ))}
             </div>

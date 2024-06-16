@@ -9,7 +9,7 @@ export interface Step {
     id: string;
     type: string;
     message: string;
-    events: Event[];
+    events?: Event[];
 }
 
 export interface Flow {

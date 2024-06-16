@@ -41,7 +41,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         if (key === 'id') {
             updatedSteps = updatedSteps.map(step => {
-                const updatedEvents = step.events.map(event => {
+                const updatedEvents = step.events?.map(event => {
                     if (event.nextStepID === oldId) {
                         return { ...event, nextStepID: value };
                     }
@@ -62,7 +62,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const updateReply = (stepId: string, replyId: string, newIntent: string, nextStepID: string) => {
         const updatedSteps = flow.steps.map(step => {
             if (step.id === stepId) {
-                const updatedEvents = step.events.map(event =>
+                const updatedEvents = step.events?.map(event =>
                     event.id === replyId ? { ...event, intent: newIntent, nextStepID } : event
                 );
                 return { ...step, events: updatedEvents };
@@ -75,7 +75,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const deleteReply = (stepId: string, replyId: string) => {
         const updatedSteps = flow.steps.map(step => {
             if (step.id === stepId) {
-                const updatedEvents = step.events.filter(event => event.id !== replyId);
+                const updatedEvents = step.events?.filter(event => event.id !== replyId);
                 return { ...step, events: updatedEvents };
             }
             return step;
@@ -87,7 +87,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const updatedSteps = flow.steps.map(step => {
             if (step.id === stepId) {
                 const newEvent: Event = { id: uuidv4(), type: 'reply', intent: '', nextStepID: '' };
-                return { ...step, events: [...step.events, newEvent] };
+                return { ...step, events: [...(step.events || []), newEvent] };
             }
             return step;
         });
