@@ -15,11 +15,16 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
     const [intent, setIntent] = useState(event.intent || '');
     const [nextStepID, setNextStepID] = useState(event.nextStepID);
 
-
     useEffect(() => {
         setNextStepID(event.nextStepID);
         setIntent(event.intent);
     }, [event.nextStepID, event.intent]);
+
+    useEffect(() => {
+        if (flowContext) {
+            flowContext.updateReply(stepId, event.id, intent, nextStepID);
+        }
+    }, [nextStepID]);
 
     if (!flowContext) {
         return null;
@@ -48,14 +53,16 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
 
     const handleChange = (newValue: any) => {
         const value = newValue ? newValue.value : '';
-        setNextStepID(value);
-        updateReply(stepId, event.id, intent, value);
+        if (value !== nextStepID) {
+            setNextStepID(value);
+        }
     };
 
     const handleCreate = (inputValue: string) => {
-        setNextStepID(inputValue);
-        updateReply(stepId, event.id, intent, inputValue);
-        handleAddMessage(inputValue);
+        if (inputValue !== nextStepID) {
+            setNextStepID(inputValue);
+            handleAddMessage(inputValue);
+        }
     };
 
     return (
