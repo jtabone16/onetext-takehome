@@ -77,6 +77,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
             />
             <div className="related-replies">
                 {relatedReplies.map((event, index) => (
+                    event.intent &&
                     <div key={index} className="text-sm text-white mb-2">
                         <button
                             onClick={() => scrollToStep(event.parentStepId)}
