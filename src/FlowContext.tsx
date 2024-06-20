@@ -1,6 +1,6 @@
-import React, { createContext, useState, ReactNode } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { Flow, FlowContextProps, Event, Step } from './types';
+import React, {createContext, ReactNode, useState} from 'react';
+import {v4 as uuidv4} from 'uuid';
+import {Event, Flow, FlowContextProps, Step} from './types';
 
 export const FlowContext = createContext<FlowContextProps | undefined>(undefined);
 
@@ -95,6 +95,11 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const importFlow = (importedFlow: Flow) => {
+        //make sure if all events are assigned a uuid
+        importedFlow.steps = importedFlow.steps.map(step => {
+            const updatedEvents = step.events?.map(event => ({...event, id: uuidv4()}));
+            return {...step, events: updatedEvents};
+        });
         setFlow(importedFlow);
     };
 

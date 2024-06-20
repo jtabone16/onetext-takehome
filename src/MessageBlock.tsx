@@ -3,6 +3,7 @@ import { FlowContext } from './FlowContext';
 import { Step, Event as EventType } from './types';
 import ReplyForm from './ReplyForm';
 import { XCircleIcon } from '@heroicons/react/24/solid';
+import { v4 as uuidv4 } from 'uuid';
 
 interface MessageBlockProps {
     step: Step;
@@ -76,9 +77,9 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
                 className="x-circle-icon"
             />
             <div className="related-replies">
-                {relatedReplies.map((event, index) => (
+                {relatedReplies.map(event => (
                     event.intent &&
-                    <div key={index} className="text-sm text-white mb-2">
+                    <div key={event.id} className="text-sm text-white mb-2">
                         <button
                             onClick={() => scrollToStep(event.parentStepId)}
                             className="font-bold text-blue-500 hover:underline"
