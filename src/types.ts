@@ -3,7 +3,7 @@ export interface Event {
     type: string;
     intent: string;
     nextStepID: string;
-    key: string;
+    key?: string;
 }
 
 export interface Step {

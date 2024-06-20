@@ -17,6 +17,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
     const flowContext = useContext(FlowContext);
     const [stepName, setStepName] = useState(step.id);
     const [message, setMessage] = useState(step.message);
+    const [error, setError] = useState<string | null>(null);
 
     const { updateMessageBlock, deleteMessageBlock, addReply } = flowContext!;
 
@@ -41,8 +42,14 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
         }
         debounceTimeout.current = setTimeout(() => {
             if (latestStepName.current !== stepName) {
-                updateMessageBlock(step.id, 'id', stepName);
-                latestStepName.current = stepName;
+                // Validate uniqueness of the step ID
+                if (flow.steps.some(s => s.id === stepName && s.id !== step.id)) {
+                    setError('Step name must be unique');
+                } else {
+                    updateMessageBlock(step.id, 'id', stepName);
+                    latestStepName.current = stepName;
+                    setError(null);
+                }
             }
             if (latestMessage.current !== message) {
                 updateMessageBlock(step.id, 'message', message);
@@ -90,21 +97,22 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
                 ))}
             </div>
             <div className="bubble bubble-right relative">
-                <label className="text-sm font-bold mb-1 text-white">Step name</label>
+                <label className="text-sm font-bold mb-1">Step name</label>
                 <input
                     type="text"
                     value={stepName}
                     onChange={e => setStepName(e.target.value)}
                     onBlur={handleSave}
-                    className="border p-2 w-full mb-2 bg-transparent placeholder-white text-white"
+                    className="border p-2 w-full mb-2 bg-transparent"
                     placeholder="Greetings, Choose Toppings, etc."
                 />
-                <label className="text-sm font-bold mb-1 text-white">Step message</label>
+                {error && <div className="text-red-500 text-sm">{error}</div>}
+                <label className="text-sm font-bold mb-1">Step message</label>
                 <textarea
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     onBlur={handleSave}
-                    className="border p-2 w-full mb-2 bg-transparent placeholder-white text-white"
+                    className="border p-2 w-full mb-2 bg-transparent"
                     placeholder="Want a pizza?, What toppings?, etc."
                 />
             </div>
