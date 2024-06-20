@@ -8,6 +8,7 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
     const flow = flowContext?.flow;
 
     const [treeData, setTreeData] = useState<any[]>([]);
+    const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
         if (flow) {
@@ -33,6 +34,14 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
                 const treeStructure = generateTree(rootStep.id, new Set());
                 if (treeStructure) {
                     setTreeData([treeStructure]);
+                    // Calculate the initial position to center the tree
+                    const dimensions = document.getElementById('treeWrapper')?.getBoundingClientRect();
+                    if (dimensions) {
+                        setTranslate({
+                            x: dimensions.width / 2,
+                            y: dimensions.height / 4,
+                        });
+                    }
                 } else {
                     setTreeData([]);
                 }
@@ -61,7 +70,13 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
     return (
         <div id="treeWrapper" style={{ width: '100%', height: '800px' }}>
             {treeData.length > 0 ? (
-                <Tree data={treeData} renderCustomNodeElement={renderNode} orientation="vertical" pathFunc="step" />
+                <Tree
+                    data={treeData}
+                    renderCustomNodeElement={renderNode}
+                    orientation="vertical"
+                    pathFunc="step"
+                    translate={translate}
+                />
             ) : (
                 <p>No data to display</p>
             )}
