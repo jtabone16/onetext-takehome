@@ -110,7 +110,9 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
                 onConfirm={confirmDelete}
                 onCancel={() => setIsModalOpen(false)}
             />
+            {relatedReplies.length > 0 && (
             <div className="related-replies">
+                <label className="text-sm font-bold mb-4">Triggered when...</label>
                 {relatedReplies.map(event => (
                     event.intent &&
                     <div key={event.id} className="text-sm text-white mb-2">
@@ -118,11 +120,12 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
                             onClick={() => scrollToStep(event.parentStepId)}
                             className="font-bold text-blue-500 hover:underline"
                         >
-                            Triggered when...{event.intent}
+                            {event.intent}
                         </button>
                     </div>
                 ))}
             </div>
+            )}
             <div className="bubble bubble-right relative">
                 <label className="text-sm font-bold mb-1">Step name</label>
                 <input
