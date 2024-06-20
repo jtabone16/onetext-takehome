@@ -44,11 +44,11 @@ const FlowBuilder: React.FC = () => {
     };
 
     return (
-        <div className="flow-builder p-4 bg-gray-100 flex">
-            <div className="flow-chart-container p-4 bg-white shadow rounded mr-4 w-1/3">
+        <div className="flow-builder">
+            <div className="flow-chart-container p-4 bg-white shadow rounded mr-4 w-1/2">
                 <FlowChart scrollToStep={scrollToStep} />
             </div>
-            <div className="message-block-container flex flex-col space-y-4 w-2/3">
+            <div className="message-block-container flex flex-col space-y-4 w-1/2">
                 <div className="controls mb-4">
                     <input type="file" accept=".json" onChange={handleImport} className="mr-2" />
                     <button onClick={handleExport} className="export-button mr-2 p-2 bg-green-500 text-white rounded">
@@ -58,8 +58,8 @@ const FlowBuilder: React.FC = () => {
                         Add Message
                     </button>
                 </div>
-                {flow.steps.map(step => (
-                    <div key={step.id} ref={el => (stepRefs.current[step.id] = el)} className="mb-4">
+                {flow.steps.map((step, index) => (
+                    <div key={index} ref={el => (stepRefs.current[step.id] = el)} className="mb-4">
                         <MessageBlock step={step} scrollToStep={scrollToStep} flow={flow} />
                     </div>
                 ))}

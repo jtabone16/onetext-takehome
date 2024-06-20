@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .flow-builder {
-  @apply p-4 bg-gray-100 flex;
+  @apply p-14 bg-gray-100 flex;
 }
 
 .flow-chart-container {
@@ -27,9 +27,9 @@
 }
 
 .step-bubble {
-  @apply p-4 bg-blue-500 text-white rounded-full cursor-pointer text-center;
-  width: 80px;
-  height: 80px;
+  @apply p-4 bg-blue-500 text-white rounded-lg cursor-pointer text-center;
+  width: 150px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,9 +37,9 @@
 }
 
 .event-bubble {
-  @apply p-2 bg-gray-500 text-white rounded-full cursor-pointer text-center;
-  width: 60px;
-  height: 60px;
+  @apply p-2 bg-gray-500 text-white rounded-lg cursor-pointer text-center;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,78 +1,115 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import ReactFlow, {
+    ReactFlowProvider,
+    addEdge,
+    MiniMap,
+    Controls,
+    Background,
+    Node,
+    Edge,
+    Position
+} from 'react-flow-renderer';
+import dagre from 'dagre';
 import { FlowContext } from './FlowContext';
+import { v4 as uuidv4 } from 'uuid';
+
+const dagreGraph = new dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+const nodeWidth = 200;
+const nodeHeight = 60;
+
+const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
+    dagreGraph.setGraph({ rankdir: 'TB' });
+
+    nodes.forEach((node) => {
+        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    });
+
+    edges.forEach((edge) => {
+        dagreGraph.setEdge(edge.source, edge.target);
+    });
+
+    dagre.layout(dagreGraph);
+
+    nodes.forEach((node) => {
+        const nodeWithPosition = dagreGraph.node(node.id);
+        node.targetPosition = Position.Top;
+        node.sourcePosition = Position.Bottom;
+
+        node.position = {
+            x: nodeWithPosition.x - nodeWidth / 2,
+            y: nodeWithPosition.y - nodeHeight / 2,
+        };
+    });
+
+    return { nodes, edges };
+};
 
 const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scrollToStep }) => {
     const flowContext = useContext(FlowContext);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const [nodes, setNodes] = useState<Node[]>([]);
+    const [edges, setEdges] = useState<Edge[]>([]);
 
     const flow = flowContext?.flow;
 
     useEffect(() => {
-        if (containerRef.current && flow && flow.steps) {
-            const container = containerRef.current;
-            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute("class", "flow-chart-lines");
-            container.appendChild(svg);
+        if (flow) {
+            const newNodes: Node[] = flow.steps.map((step) => ({
+                id: step.id,
+                data: { label: step.id },
+                position: { x: 0, y: 0 },
+                style: {
+                    width: nodeWidth,
+                    height: nodeHeight,
+                    background: '#007AFF',
+                    color: '#FFFFFF',
+                    borderRadius: '20px',
+                    padding: '10px',
+                    textAlign: 'center',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    cursor: 'pointer',
+                },
+                onClick: () => scrollToStep(step.id),
+                key: uuidv4()
+            }));
 
-            flow.steps.forEach(step => {
-                step.events?.forEach(event => {
-                    if (event.nextStepID) {
-                        const startElement = document.getElementById(`reply-${event.id}`);
-                        const endElement = document.getElementById(`step-${event.nextStepID}`);
-                        if (startElement && endElement) {
-                            const startRect = startElement.getBoundingClientRect();
-                            const endRect = endElement.getBoundingClientRect();
+            const newEdges: Edge[] = flow.steps.flatMap((step) =>
+                (step.events || []).map((event) => ({
+                    id: uuidv4(),
+                    source: step.id,
+                    target: event.nextStepID,
+                    arrowHeadType: 'arrowclosed',
+                    animated: true,
+                }))
+            );
 
-                            const startX = startRect.left + startRect.width / 2 - container.getBoundingClientRect().left;
-                            const startY = startRect.top + startRect.height / 2 - container.getBoundingClientRect().top;
-                            const endX = endRect.left + endRect.width / 2 - container.getBoundingClientRect().left;
-                            const endY = endRect.top + endRect.height / 2 - container.getBoundingClientRect().top;
+            const layoutedElements = getLayoutedElements(newNodes, newEdges);
 
-                            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                            line.setAttribute("x1", startX.toString());
-                            line.setAttribute("y1", startY.toString());
-                            line.setAttribute("x2", endX.toString());
-                            line.setAttribute("y2", endY.toString());
-                            line.setAttribute("stroke", "black");
-                            line.setAttribute("stroke-width", "2");
-
-                            svg.appendChild(line);
-                        }
-                    }
-                });
-            });
-
-            return () => {
-                container.removeChild(svg);
-            };
+            setNodes(layoutedElements.nodes);
+            setEdges(layoutedElements.edges);
         }
-    }, [flow]);
+    }, [flow, scrollToStep]);
 
-    if (!flowContext || !flow || !flow.steps) {
-        return null;
-    }
+    const onConnect = useCallback(
+        (params: any) => setEdges((eds) => addEdge(params, eds)),
+        []
+    );
 
     return (
-        <div className="flow-chart-container" ref={containerRef}>
-            <div className="flow-chart">
-                {flow.steps.map(step => (
-                    <div key={step.id} className="flow-chart-step" id={`step-${step.id}`}>
-                        <div className="step-bubble" onClick={() => scrollToStep(step.id)}>
-                            {step.id}
-                        </div>
-                        <div className="flow-chart-replies">
-                            {step.events?.map(event => (
-                                <div key={event.id} className="flow-chart-event" id={`reply-${event.id}`}>
-                                    <div className="event-line"></div>
-                                    <div className="event-bubble" onClick={() => scrollToStep(event?.nextStepID)}>
-                                        {event?.intent}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
+        <div style={{ height: 500, width: '100%' }}>
+            <ReactFlowProvider>
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onConnect={onConnect}
+                    style={{ background: '#A2D2FF' }}
+                >
+                    <MiniMap />
+                    <Controls />
+                    <Background />
+                </ReactFlow>
+            </ReactFlowProvider>
         </div>
     );
 };
