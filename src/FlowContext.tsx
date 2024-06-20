@@ -1,6 +1,6 @@
-import React, {createContext, ReactNode, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
-import {Event, Flow, FlowContextProps, Step} from './types';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { Flow, FlowContextProps, Event, Step } from './types';
 
 export const FlowContext = createContext<FlowContextProps | undefined>(undefined);
 
@@ -10,6 +10,13 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         steps: []
     });
 
+    // Ensure initialStepID is always the first step's ID
+    useEffect(() => {
+        if (flow.steps.length > 0 && flow.initialStepID !== flow.steps[0].id) {
+            setFlow({ ...flow, initialStepID: flow.steps[0].id });
+        }
+    }, [flow.steps]);
+
     const addMessageBlock = () => {
         const newStepNumber = flow.steps.length + 1;
         const newStep: Step = {
@@ -18,7 +25,12 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             message: '',
             events: []
         };
-        setFlow({ ...flow, steps: [...flow.steps, newStep] });
+        const updatedSteps = [...flow.steps, newStep];
+        setFlow({
+            ...flow,
+            steps: updatedSteps,
+            initialStepID: updatedSteps[0].id // Update initialStepID
+        });
     };
 
     const addMessageWithID = (id: string) => {
@@ -28,7 +40,12 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             message: '',
             events: []
         };
-        setFlow({ ...flow, steps: [...flow.steps, newStep] });
+        const updatedSteps = [...flow.steps, newStep];
+        setFlow({
+            ...flow,
+            steps: updatedSteps,
+            initialStepID: updatedSteps[0].id // Update initialStepID
+        });
     };
 
     const updateMessageBlock = (oldId: string, key: string, value: string) => {
@@ -56,7 +73,11 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const deleteMessageBlock = (id: string) => {
         const updatedSteps = flow.steps.filter(step => step.id !== id);
-        setFlow({ ...flow, steps: updatedSteps });
+        setFlow({
+            ...flow,
+            steps: updatedSteps,
+            initialStepID: updatedSteps.length > 0 ? updatedSteps[0].id : '' // Update initialStepID
+        });
     };
 
     const updateReply = (stepId: string, replyId: string, newIntent: string, nextStepID: string) => {

@@ -1,115 +1,70 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
-import ReactFlow, {
-    ReactFlowProvider,
-    addEdge,
-    MiniMap,
-    Controls,
-    Background,
-    Node,
-    Edge,
-    Position
-} from 'react-flow-renderer';
-import dagre from 'dagre';
+import React, { useContext, useEffect, useState } from 'react';
+import Tree from 'react-d3-tree';
 import { FlowContext } from './FlowContext';
-import { v4 as uuidv4 } from 'uuid';
-
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
-
-const nodeWidth = 200;
-const nodeHeight = 60;
-
-const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
-    dagreGraph.setGraph({ rankdir: 'TB' });
-
-    nodes.forEach((node) => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-    });
-
-    edges.forEach((edge) => {
-        dagreGraph.setEdge(edge.source, edge.target);
-    });
-
-    dagre.layout(dagreGraph);
-
-    nodes.forEach((node) => {
-        const nodeWithPosition = dagreGraph.node(node.id);
-        node.targetPosition = Position.Top;
-        node.sourcePosition = Position.Bottom;
-
-        node.position = {
-            x: nodeWithPosition.x - nodeWidth / 2,
-            y: nodeWithPosition.y - nodeHeight / 2,
-        };
-    });
-
-    return { nodes, edges };
-};
+import { Step, Event as EventType } from './types';
 
 const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scrollToStep }) => {
     const flowContext = useContext(FlowContext);
-    const [nodes, setNodes] = useState<Node[]>([]);
-    const [edges, setEdges] = useState<Edge[]>([]);
-
     const flow = flowContext?.flow;
+
+    const [treeData, setTreeData] = useState<any[]>([]);
 
     useEffect(() => {
         if (flow) {
-            const newNodes: Node[] = flow.steps.map((step) => ({
-                id: step.id,
-                data: { label: step.id },
-                position: { x: 0, y: 0 },
-                style: {
-                    width: nodeWidth,
-                    height: nodeHeight,
-                    background: '#007AFF',
-                    color: '#FFFFFF',
-                    borderRadius: '20px',
-                    padding: '10px',
-                    textAlign: 'center',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                    cursor: 'pointer',
-                },
-                onClick: () => scrollToStep(step.id),
-                key: uuidv4()
-            }));
+            const generateTree = (stepId: string, visited: Set<string>): any => {
+                if (visited.has(stepId)) {
+                    return null; // Circular dependency detected, stop recursion
+                }
 
-            const newEdges: Edge[] = flow.steps.flatMap((step) =>
-                (step.events || []).map((event) => ({
-                    id: uuidv4(),
-                    source: step.id,
-                    target: event.nextStepID,
-                    arrowHeadType: 'arrowclosed',
-                    animated: true,
-                }))
-            );
+                visited.add(stepId);
 
-            const layoutedElements = getLayoutedElements(newNodes, newEdges);
+                const step = flow.steps.find(s => s.id === stepId);
+                if (!step) return null;
 
-            setNodes(layoutedElements.nodes);
-            setEdges(layoutedElements.edges);
+                const children = step.events?.map(event => generateTree(event.nextStepID, new Set(visited))).filter(Boolean) || [];
+                return {
+                    name: step.id,
+                    children,
+                };
+            };
+
+            const rootStep = flow.steps.find(s => s.id === flow.initialStepID);
+            if (rootStep) {
+                const treeStructure = generateTree(rootStep.id, new Set());
+                if (treeStructure) {
+                    setTreeData([treeStructure]);
+                } else {
+                    setTreeData([]);
+                }
+            }
         }
-    }, [flow, scrollToStep]);
+    }, [flow]);
 
-    const onConnect = useCallback(
-        (params: any) => setEdges((eds) => addEdge(params, eds)),
-        []
+    const renderNode = ({ nodeDatum }: any) => (
+        <g onClick={() => scrollToStep(nodeDatum.name)}>
+            <rect
+                x="-60"
+                y="-30"
+                width="120"
+                height="60"
+                rx="30"
+                fill="#007AFF"
+                stroke="#007AFF"
+                strokeWidth="2"
+            />
+            <text fill="white" x="0" y="0" textAnchor="middle" fontSize="12" stroke="none">
+                {nodeDatum.name}
+            </text>
+        </g>
     );
 
     return (
-        <div style={{ height: 500, width: '100%' }}>
-            <ReactFlowProvider>
-                <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onConnect={onConnect}
-                    style={{ background: '#A2D2FF' }}
-                >
-                    <MiniMap />
-                    <Controls />
-                    <Background />
-                </ReactFlow>
-            </ReactFlowProvider>
+        <div id="treeWrapper" style={{ width: '100%', height: '800px' }}>
+            {treeData.length > 0 ? (
+                <Tree data={treeData} renderCustomNodeElement={renderNode} orientation="vertical" pathFunc="step" />
+            ) : (
+                <p>No data to display</p>
+            )}
         </div>
     );
 };
