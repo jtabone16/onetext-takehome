@@ -3,6 +3,7 @@ import CreatableSelect from 'react-select/creatable';
 import { FlowContext } from './FlowContext';
 import { Event } from './types';
 import { XCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import ConfirmationModal from './ConfirmationModal';
 
 interface ReplyFormProps {
     event: Event;
@@ -14,6 +15,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
     const flowContext = useContext(FlowContext);
     const [intent, setIntent] = useState(event.intent || '');
     const [nextStepID, setNextStepID] = useState(event.nextStepID);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         setNextStepID(event.nextStepID);
@@ -42,6 +44,15 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
         }
     };
 
+    const handleDelete = () => {
+        setIsModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        deleteReply(stepId, event.id);
+        setIsModalOpen(false);
+    };
+
     const stepOptions = flow.steps
         .filter(step => step.id !== stepId)
         .map(step => ({
@@ -67,7 +78,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
 
     return (
         <div className="reply-form mt-2 bubble bubble-left relative">
-            <label className="text-sm font-bold mb-1 text-black">When the user...</label>
+            <label className="text-sm font-bold mb-1 text-black">When...</label>
             <input
                 type="text"
                 value={intent}
@@ -127,8 +138,22 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
                 />
             </div>
             <XCircleIcon
-                onClick={() => deleteReply(stepId, event.id)}
+                onClick={handleDelete}
                 className="h-6 w-6 text-red-500 absolute -top-2.5 -right-2 cursor-pointer"
+            />
+            <ConfirmationModal
+                isOpen={isModalOpen}
+                title="Delete Reply"
+                message={`Are you sure you want to delete this reply? ${nextStepID ? 'This reply triggers:' : ''}`}
+                content={
+                    nextStepID ? (
+                        <p className="text-sm font-bold">
+                            {nextStepID}
+                        </p>
+                    ): undefined
+                }
+                onConfirm={confirmDelete}
+                onCancel={() => setIsModalOpen(false)}
             />
         </div>
     );

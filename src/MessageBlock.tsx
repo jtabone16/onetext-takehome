@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, {useState, useContext, useEffect, useRef, useMemo} from 'react';
 import { FlowContext } from './FlowContext';
 import { Step, Event as EventType } from './types';
 import ReplyForm from './ReplyForm';
 import { XCircleIcon } from '@heroicons/react/24/solid';
-import { v4 as uuidv4 } from 'uuid';
+import ConfirmationModal from './ConfirmationModal';
 
 interface MessageBlockProps {
     step: Step;
@@ -18,11 +18,26 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
     const [stepName, setStepName] = useState(step.id);
     const [message, setMessage] = useState(step.message);
     const [error, setError] = useState<string | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { updateMessageBlock, deleteMessageBlock, addReply } = flowContext!;
 
     const latestStepName = useRef(step.id);
     const latestMessage = useRef(step.message);
+
+    const relatedReplies = useMemo(() =>
+         flow.steps.flatMap((s: Step) =>
+            s.events?.filter((event: EventType) => event.nextStepID === step.id)
+                .map((event: EventType) => ({ ...event, parentStepId: s.id })) || []
+        ),
+    [flow.steps, step.id]);
+
+    const confirmationModalContent = useMemo(() => relatedReplies.length ?
+        <li className="text-sm">
+            {relatedReplies.map(event => event.intent)}
+        </li> : undefined
+    , [relatedReplies]);
+
 
     useEffect(() => {
         setStepName(step.id);
@@ -67,10 +82,14 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
         }, 0);
     };
 
-    const relatedReplies = flow.steps.flatMap((s: Step) =>
-        s.events?.filter((event: EventType) => event.nextStepID === step.id)
-            .map((event: EventType) => ({ ...event, parentStepId: s.id })) || []
-    );
+    const handleDelete = () => {
+        setIsModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        deleteMessageBlock(step.id);
+        setIsModalOpen(false);
+    };
 
     useEffect(() => {
         setStepName(step.id);
@@ -80,8 +99,16 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
     return (
         <div className="flex flex-col message-block p-4 mb-4 bg-white shadow rounded relative">
             <XCircleIcon
-                onClick={() => deleteMessageBlock(step.id)}
+                onClick={handleDelete}
                 className="x-circle-icon"
+            />
+            <ConfirmationModal
+                isOpen={isModalOpen}
+                title="Delete Step"
+                message={`Are you sure you want to delete this step? ${relatedReplies.length > 0 ? 'This step is being triggered by the following replies: ' : ''}`}
+                content={confirmationModalContent}
+                onConfirm={confirmDelete}
+                onCancel={() => setIsModalOpen(false)}
             />
             <div className="related-replies">
                 {relatedReplies.map(event => (
@@ -91,7 +118,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
                             onClick={() => scrollToStep(event.parentStepId)}
                             className="font-bold text-blue-500 hover:underline"
                         >
-                            Triggered when the user...{event.intent}
+                            Triggered when...{event.intent}
                         </button>
                     </div>
                 ))}
