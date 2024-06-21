@@ -42,7 +42,7 @@ const EventForm: React.FC<EventFormProps> = ({
     updateEvent(stepId, event.id, intent, nextStepID);
   };
 
-  const handleAddMessage = (id: string) => {
+  const handleAddStep = (id: string) => {
     if (id && !flow.steps.find((step) => step.id === id)) {
       addStep(id);
     }
@@ -78,7 +78,7 @@ const EventForm: React.FC<EventFormProps> = ({
   const handleCreate = (inputValue: string) => {
     if (inputValue !== nextStepID) {
       setNextStepID(inputValue);
-      handleAddMessage(inputValue);
+      handleAddStep(inputValue);
     }
   };
 
