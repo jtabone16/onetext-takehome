@@ -84,7 +84,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const updatedSteps = flow.steps.map(step => {
             if (step.id === stepId) {
                 const updatedEvents = step.events?.map(event =>
-                    event.id === replyId ? { ...event, intent: newIntent, nextStepID } : event
+                    event.id === eventId ? { ...event, intent: newIntent, nextStepID } : event
                 );
                 return { ...step, events: updatedEvents };
             }
@@ -93,10 +93,10 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setFlow({ ...flow, steps: updatedSteps });
     };
 
-    const deleteEvent = (stepId: string, replyId: string) => {
+    const deleteEvent = (stepId: string, eventId: string) => {
         const updatedSteps = flow.steps.map(step => {
             if (step.id === stepId) {
-                const updatedEvents = step.events?.filter(event => event.id !== replyId);
+                const updatedEvents = step.events?.filter(event => event.id !== eventId);
                 return { ...step, events: updatedEvents };
             }
             return step;
