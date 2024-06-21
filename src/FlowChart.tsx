@@ -10,6 +10,23 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
     const [translate, setTranslate] = useState({ x: 0, y: 0 });
     const [tooltip, setTooltip] = useState<string | null>(null);
 
+    const updateTranslate = () => {
+        const dimensions = document.getElementById('treeWrapper')?.getBoundingClientRect();
+        if (dimensions) {
+            setTranslate({
+                x: dimensions.width / 2,
+                y: dimensions.height / 4,
+            });
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', updateTranslate);
+        return () => {
+            window.removeEventListener('resize', updateTranslate);
+        };
+    }, []);
+
     useEffect(() => {
         if (flow) {
             const generateTree = (stepId: string, visited: Set<string>): any => {
@@ -35,13 +52,7 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
                 if (treeStructure) {
                     setTreeData([treeStructure]);
                     // Calculate the initial position to center the tree
-                    const dimensions = document.getElementById('treeWrapper')?.getBoundingClientRect();
-                    if (dimensions) {
-                        setTranslate({
-                            x: dimensions.width / 2,
-                            y: dimensions.height / 4,
-                        });
-                    }
+                    updateTranslate();
                 } else {
                     setTreeData([]);
                 }
