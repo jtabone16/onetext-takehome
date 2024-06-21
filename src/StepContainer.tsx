@@ -14,10 +14,10 @@ interface StepContainerProps {
 }
 
 const StepContainer: React.FC<StepContainerProps> = ({
-  step,
-  scrollToStep,
-  flow,
-}) => {
+                                                       step,
+                                                       scrollToStep,
+                                                       flow,
+                                                     }) => {
   const flowContext = useContext(FlowContext);
   const [stepName, setStepName] = useState(step.id);
   const [message, setMessage] = useState(step.message);
@@ -30,25 +30,25 @@ const StepContainer: React.FC<StepContainerProps> = ({
   const latestMessage = useRef(step.message);
 
   const relatedReplies = useMemo(
-    () =>
-      flow.steps.flatMap(
-        (s: Step) =>
-          s.events
-            ?.filter((event: EventType) => event.nextStepID === step.id)
-            .map((event: EventType) => ({ ...event, parentStepId: s.id })) ||
-          [],
-      ),
-    [flow.steps, step.id],
+      () =>
+          flow.steps.flatMap(
+              (s: Step) =>
+                  s.events
+                      ?.filter((event: EventType) => event.nextStepID === step.id)
+                      .map((event: EventType) => ({ ...event, parentStepId: s.id })) ||
+                  [],
+          ),
+      [flow.steps, step.id],
   );
 
   const confirmationModalContent = useMemo(
-    () =>
-      relatedReplies.length ? (
-        <li className="text-sm">
-          {relatedReplies.map((event) => event.intent)}
-        </li>
-      ) : undefined,
-    [relatedReplies],
+      () =>
+          relatedReplies.length ? (
+              <li className="text-sm">
+                {relatedReplies.map((event) => event.intent)}
+              </li>
+          ) : undefined,
+      [relatedReplies],
   );
 
   useEffect(() => {
@@ -109,75 +109,75 @@ const StepContainer: React.FC<StepContainerProps> = ({
   }, [step.id, step.message]);
 
   return (
-    <div className="flex flex-col message-block p-4 mb-4 bg-white shadow rounded relative">
-      <XCircleIcon
-        onClick={handleDelete}
-        className="h-6 w-6 text-red-500 absolute -top-2.5 -right-2 cursor-pointer"
-      />
-      <ConfirmationModal
-        isOpen={isModalOpen}
-        title="Delete Step"
-        message={`Are you sure you want to delete this step? ${relatedReplies.length > 0 ? 'This step is being triggered by the following replies: ' : ''}`}
-        content={confirmationModalContent}
-        onConfirm={confirmDelete}
-        onCancel={() => setIsModalOpen(false)}
-      />
-      {relatedReplies.length > 0 && (
-        <div className="related-replies">
-          <label className="text-sm font-bold mb-4">Triggered when...</label>
-          {relatedReplies.map(
-            (event) =>
-              event.intent && (
-                <div key={event.id} className="text-sm text-white mb-2">
-                  <button
-                    onClick={() => scrollToStep(event.parentStepId)}
-                    className="font-bold text-blue-500 hover:underline"
-                  >
-                    {event.intent}
-                  </button>
-                </div>
-              ),
-          )}
-        </div>
-      )}
-      <div className="bubble bubble-right">
-        <label className="text-sm font-bold mb-1">Step name</label>
-        <input
-          type="text"
-          value={stepName}
-          onChange={(e) => setStepName(e.target.value)}
-          onBlur={handleSave}
-          className="border p-2 w-full mb-2 bg-transparent"
-          placeholder="Greetings, Choose Toppings, etc."
+      <div className="flex flex-col message-block ml-16 w-9/10 p-4 mb-4 bg-white shadow rounded relative transform transition-transform duration-500 ease-in-out hover:scale-105">
+        <XCircleIcon
+            onClick={handleDelete}
+            className="h-6 w-6 text-red-500 absolute -top-2.5 -right-2 cursor-pointer"
         />
-        {error && <div className="text-red-500 text-sm">{error}</div>}
-        <label className="text-sm font-bold mb-1">Step message</label>
-        <textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onBlur={handleSave}
-          className="border p-2 w-full mb-2 bg-transparent"
-          placeholder="Want a pizza?, What toppings?, etc."
+        <ConfirmationModal
+            isOpen={isModalOpen}
+            title="Delete Step"
+            message={`Are you sure you want to delete this step? ${relatedReplies.length > 0 ? 'This step is being triggered by the following replies: ' : ''}`}
+            content={confirmationModalContent}
+            onConfirm={confirmDelete}
+            onCancel={() => setIsModalOpen(false)}
         />
-      </div>
-      <div className="replies mt-4">
-        {step.events?.map((event: EventType) => (
-          <EventForm
-            key={event.id}
-            event={event}
-            stepId={step.id}
-            scrollToStep={scrollToStep}
+        {relatedReplies.length > 0 && (
+            <div className="related-replies">
+              <label className="text-sm font-bold mb-4">Triggered when...</label>
+              {relatedReplies.map(
+                  (event) =>
+                      event.intent && (
+                          <div key={event.id} className="text-sm text-white mb-2">
+                            <button
+                                onClick={() => scrollToStep(event.parentStepId)}
+                                className="font-bold text-blue-500 hover:underline"
+                            >
+                              {event.intent}
+                            </button>
+                          </div>
+                      ),
+              )}
+            </div>
+        )}
+        <div className="bubble bubble-right">
+          <label className="text-sm font-bold mb-1">Step name</label>
+          <input
+              type="text"
+              value={stepName}
+              onChange={(e) => setStepName(e.target.value)}
+              onBlur={handleSave}
+              className="border p-2 w-full mb-2 bg-transparent"
+              placeholder="Greetings, Choose Toppings, etc."
           />
-        ))}
-      </div>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+          <label className="text-sm font-bold mb-1">Step message</label>
+          <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onBlur={handleSave}
+              className="border p-2 w-full mb-2 bg-transparent"
+              placeholder="Want a pizza?, What toppings?, etc."
+          />
+        </div>
+        <div className="replies mt-4">
+          {step.events?.map((event: EventType) => (
+              <EventForm
+                  key={event.id}
+                  event={event}
+                  stepId={step.id}
+                  scrollToStep={scrollToStep}
+              />
+          ))}
+        </div>
 
-      <button
-        onClick={handleAddEvent}
-        className="text-white rounded mt-2 p-2 bg-green-500 self-end"
-      >
-        Add Event
-      </button>
-    </div>
+        <button
+            onClick={handleAddEvent}
+            className="text-white rounded mt-2 p-2 bg-green-500 self-end transition-transform transform hover:scale-105"
+        >
+          Add Event
+        </button>
+      </div>
   );
 };
 

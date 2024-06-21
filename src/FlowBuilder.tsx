@@ -97,7 +97,7 @@ const FlowBuilder: React.FC = () => {
   };
 
   return (
-      <div className={`bg-gray-100 flex flex-col items-center pb-3 px-3 sm:pb-14 sm:px-14 ${!flow.steps.length && 'sm:pb-2' }`}>
+      <div className={`bg-gray-100 flex flex-col items-center pb-3 px-3 sm:pb-14 sm:px-14 ${!flow.steps.length && 'sm:pb-2'}`}>
         <div className="sticky rounded top-0 bg-gray-100 p-2 w-full z-10 my-4">
           <div className="flex justify-center gap-2">
             <div>
@@ -110,48 +110,48 @@ const FlowBuilder: React.FC = () => {
               />
               <button
                   onClick={() => document?.getElementById('fileInput')?.click()}
-                  className="p-2 bg-blue-500 text-white rounded"
+                  className="p-2 bg-blue-500 text-white rounded transition-transform transform hover:scale-105"
               >
                 Import JSON
               </button>
             </div>
             <button
                 onClick={handleAddStep}
-                className="p-2 bg-blue-500 text-white rounded"
+                className="p-2 bg-blue-500 text-white rounded transition-transform transform hover:scale-105"
             >
               Add Step
             </button>
             <button
                 disabled={!flow.steps.length}
                 onClick={handleResetFlow}
-                className={`ml-4 p-2 bg-red-500 text-white rounded ${!flow.steps.length && 'opacity-80 cursor-not-allowed'}`}
+                className={`ml-4 p-2 bg-red-500 text-white rounded transition-transform transform hover:scale-105 ${!flow.steps.length && 'opacity-80 cursor-not-allowed'}`}
             >
               Reset Flow
             </button>
             <button
                 disabled={!flow.steps.length}
                 onClick={handleSaveFlow}
-                className={`p-2 bg-green-500 text-white rounded ${!flow.steps.length && 'opacity-80 cursor-not-allowed'}`}
+                className={`p-2 bg-green-500 text-white rounded transition-transform transform hover:scale-105 ${!flow.steps.length && 'opacity-80 cursor-not-allowed'}`}
             >
               Save Flow
             </button>
           </div>
         </div>
         {!flow.steps.length ? (
-            <div className="text-gray-500">
+            <div className="text-gray-500 transition-opacity duration-500 ease-in-out opacity-0 animate-fade-in">
               No steps yet. Add a step or import a flow to get started!
             </div>
         ) : (
-            <div className="flex flex-col sm:flex-row w-full">
-              <div className="p-4 bg-white shadow rounded mr-4 w-full sm:w-1/2 justify-center relative hidden sm:flex">
+            <div className="flex flex-col sm:flex-row w-full transition-transform transform duration-500 ease-in-out">
+              <div className="p-4 bg-white shadow rounded mr-4 w-full sm:w-1/3 justify-center relative hidden sm:flex">
                 <FlowChart scrollToStep={scrollToStep} />
               </div>
-              <div className="space-y-4 w-full sm:w-1/2">
+              <div className="space-y-4 w-full sm:w-2/3">
                 {flow.steps.map((step, index) => (
                     <div
                         key={index}
                         ref={(el) => (stepRefs.current[step.id] = el)}
-                        className="mb-4"
+                        className="mb-4 transition-transform transform duration-500 ease-in-out"
                     >
                       <StepContainer
                           step={step}
