@@ -24,9 +24,9 @@ export interface FlowContextProps {
     addMessageWithID: (id: string) => void;
     updateMessageBlock: (oldId: string, key: string, value: string) => void;
     deleteMessageBlock: (id: string) => void;
-    updateReply: (stepId: string, replyId: string, newIntent: string, nextStepID: string) => void;
-    deleteReply: (stepId: string, replyId: string) => void;
-    addReply: (stepId: string) => void;
+    updateEvent: (stepId: string, eventId: string, newIntent: string, nextStepID: string) => void;
+    deleteEvent: (stepId: string, eventId: string) => void;
+    addEvent: (stepId: string) => void;
     importFlow: (importedFlow: Flow) => void;
     exportFlow: () => Flow;
 }

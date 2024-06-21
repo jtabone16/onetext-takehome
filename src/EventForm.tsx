@@ -5,13 +5,13 @@ import { Event } from './types';
 import { XCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import ConfirmationModal from './ConfirmationModal';
 
-interface ReplyFormProps {
+interface EventFormProps {
     event: Event;
     stepId: string;
     scrollToStep: (stepId?: string) => void;
 }
 
-const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) => {
+const EventForm: React.FC<EventFormProps> = ({ event, stepId, scrollToStep }) => {
     const flowContext = useContext(FlowContext);
     const [intent, setIntent] = useState(event.intent || '');
     const [nextStepID, setNextStepID] = useState(event.nextStepID);
@@ -24,7 +24,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
 
     useEffect(() => {
         if (flowContext) {
-            flowContext.updateReply(stepId, event.id, intent, nextStepID);
+            flowContext.updateEvent(stepId, event.id, intent, nextStepID);
         }
     }, [nextStepID]);
 
@@ -32,10 +32,10 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
         return null;
     }
 
-    const { flow, updateReply, deleteReply, addMessageWithID } = flowContext;
+    const { flow, updateEvent, deleteEvent, addMessageWithID } = flowContext;
 
     const handleSave = () => {
-        updateReply(stepId, event.id, intent, nextStepID);
+        updateEvent(stepId, event.id, intent, nextStepID);
     };
 
     const handleAddMessage = (id: string) => {
@@ -49,7 +49,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
     };
 
     const confirmDelete = () => {
-        deleteReply(stepId, event.id);
+        deleteEvent(stepId, event.id);
         setIsModalOpen(false);
     };
 
@@ -143,8 +143,8 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
             />
             <ConfirmationModal
                 isOpen={isModalOpen}
-                title="Delete Reply"
-                message={`Are you sure you want to delete this reply? ${nextStepID ? 'This reply triggers:' : ''}`}
+                title="Delete Event"
+                message={`Are you sure you want to delete this event? ${nextStepID ? 'This event triggers:' : ''}`}
                 content={
                     nextStepID ? (
                         <p className="text-sm font-bold">
@@ -159,4 +159,4 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
     );
 };
 
-export default ReplyForm;
+export default EventForm;

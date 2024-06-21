@@ -80,7 +80,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
     };
 
-    const updateReply = (stepId: string, replyId: string, newIntent: string, nextStepID: string) => {
+    const updateEvent = (stepId: string, eventId: string, newIntent: string, nextStepID: string) => {
         const updatedSteps = flow.steps.map(step => {
             if (step.id === stepId) {
                 const updatedEvents = step.events?.map(event =>
@@ -93,7 +93,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setFlow({ ...flow, steps: updatedSteps });
     };
 
-    const deleteReply = (stepId: string, replyId: string) => {
+    const deleteEvent = (stepId: string, replyId: string) => {
         const updatedSteps = flow.steps.map(step => {
             if (step.id === stepId) {
                 const updatedEvents = step.events?.filter(event => event.id !== replyId);
@@ -104,7 +104,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setFlow({ ...flow, steps: updatedSteps });
     };
 
-    const addReply = (stepId: string) => {
+    const addEvent = (stepId: string) => {
         const updatedSteps = flow.steps.map(step => {
             if (step.id === stepId) {
                 const newEvent: Event = { id: uuidv4(), type: 'reply', intent: '', nextStepID: '' };
@@ -136,9 +136,9 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 addMessageWithID,
                 updateMessageBlock,
                 deleteMessageBlock,
-                updateReply,
-                deleteReply,
-                addReply,
+                updateEvent,
+                deleteEvent,
+                addEvent,
                 importFlow,
                 exportFlow
             }}

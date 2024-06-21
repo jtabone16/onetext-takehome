@@ -1,7 +1,7 @@
 import React, {useState, useContext, useEffect, useRef, useMemo} from 'react';
 import { FlowContext } from './FlowContext';
 import { Step, Event as EventType } from './types';
-import ReplyForm from './ReplyForm';
+import EventForm from './EventForm';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 import ConfirmationModal from './ConfirmationModal';
 
@@ -20,7 +20,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const { updateMessageBlock, deleteMessageBlock, addReply } = flowContext!;
+    const { updateMessageBlock, deleteMessageBlock, addEvent } = flowContext!;
 
     const latestStepName = useRef(step.id);
     const latestMessage = useRef(step.message);
@@ -73,12 +73,12 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
         }, 300);
     };
 
-    const handleAddReply = () => {
+    const handleAddEvent = () => {
         if (debounceTimeout.current) {
             clearTimeout(debounceTimeout.current);
         }
         debounceTimeout.current = setTimeout(() => {
-            addReply(step.id);
+            addEvent(step.id);
         }, 0);
     };
 
@@ -148,11 +148,11 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
             </div>
             <div className="replies mt-4">
                 {step.events?.map((event: EventType) => (
-                    <ReplyForm key={event.id} event={event} stepId={step.id} scrollToStep={scrollToStep}/>
+                    <EventForm key={event.id} event={event} stepId={step.id} scrollToStep={scrollToStep}/>
                 ))}
             </div>
 
-            <button onClick={handleAddReply}
+            <button onClick={handleAddEvent}
                     className="text-white rounded mt-2 p-2 bg-green-500 self-end">
                 Add Event
             </button>
