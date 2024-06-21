@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react';
 import { FlowContext } from './FlowContext';
-import MessageBlock from './MessageBlock';
+import StepContainer from './StepContainer';
 import FlowChart from './FlowChart';
 import ConfirmationModal from './ConfirmationModal';
 import { Flow } from './types';
@@ -15,7 +15,7 @@ const FlowBuilder: React.FC = () => {
     return null;
   }
 
-  const { flow, addMessageBlock, importFlow, exportFlow } = flowContext;
+  const { flow, addStep, importFlow } = flowContext;
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader();
@@ -36,7 +36,7 @@ const FlowBuilder: React.FC = () => {
   };
 
   const handleExport = () => {
-    const json = JSON.stringify(exportFlow(), null, 2);
+    const json = JSON.stringify(flow, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -69,8 +69,8 @@ const FlowBuilder: React.FC = () => {
     }
   };
 
-  const handleAddMessageBlock = () => {
-    const newStepId = addMessageBlock();
+  const handleAddStep = () => {
+    const newStepId = addStep();
     setTimeout(() => scrollToStep(newStepId), 100); // Scroll to the newly added step
   };
 
@@ -101,7 +101,7 @@ const FlowBuilder: React.FC = () => {
             Export JSON
           </button>
           <button
-            onClick={handleAddMessageBlock}
+            onClick={handleAddStep}
             className="p-2 bg-blue-500 text-white rounded"
           >
             Add Step
@@ -124,7 +124,7 @@ const FlowBuilder: React.FC = () => {
                 ref={(el) => (stepRefs.current[step.id] = el)}
                 className="mb-4"
               >
-                <MessageBlock
+                <StepContainer
                   step={step}
                   scrollToStep={scrollToStep}
                   flow={flow}

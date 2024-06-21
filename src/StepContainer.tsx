@@ -5,7 +5,7 @@ import EventForm from './EventForm';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 import ConfirmationModal from './ConfirmationModal';
 
-interface MessageBlockProps {
+interface StepContainerProps {
   step: Step;
   scrollToStep: (stepId?: string) => void;
   flow: {
@@ -13,7 +13,7 @@ interface MessageBlockProps {
   };
 }
 
-const MessageBlock: React.FC<MessageBlockProps> = ({
+const StepContainer: React.FC<StepContainerProps> = ({
   step,
   scrollToStep,
   flow,
@@ -24,7 +24,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { updateMessageBlock, deleteMessageBlock, addEvent } = flowContext!;
+  const { updateStep, deleteStep, addEvent } = flowContext!;
 
   const latestStepName = useRef(step.id);
   const latestMessage = useRef(step.message);
@@ -73,13 +73,13 @@ const MessageBlock: React.FC<MessageBlockProps> = ({
         if (flow.steps.some((s) => s.id === stepName && s.id !== step.id)) {
           setError('Step name must be unique');
         } else {
-          updateMessageBlock(step.id, 'id', stepName);
+          updateStep(step.id, 'id', stepName);
           latestStepName.current = stepName;
           setError(null);
         }
       }
       if (latestMessage.current !== message) {
-        updateMessageBlock(step.id, 'message', message);
+        updateStep(step.id, 'message', message);
         latestMessage.current = message;
       }
     }, 300);
@@ -99,7 +99,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({
   };
 
   const confirmDelete = () => {
-    deleteMessageBlock(step.id);
+    deleteStep(step.id);
     setIsModalOpen(false);
   };
 
@@ -181,4 +181,4 @@ const MessageBlock: React.FC<MessageBlockProps> = ({
   );
 };
 
-export default MessageBlock;
+export default StepContainer;

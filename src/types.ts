@@ -20,10 +20,9 @@ export interface Flow {
 
 export interface FlowContextProps {
   flow: Flow;
-  addMessageBlock: () => string;
-  addMessageWithID: (id: string) => void;
-  updateMessageBlock: (oldId: string, key: string, value: string) => void;
-  deleteMessageBlock: (id: string) => void;
+  addStep: (id?: string) => string;
+  updateStep: (oldId: string, key: string, value: string) => void;
+  deleteStep: (id: string) => void;
   updateEvent: (
     stepId: string,
     eventId: string,
@@ -33,5 +32,4 @@ export interface FlowContextProps {
   deleteEvent: (stepId: string, eventId: string) => void;
   addEvent: (stepId: string) => void;
   importFlow: (importedFlow: Flow) => void;
-  exportFlow: () => Flow;
 }

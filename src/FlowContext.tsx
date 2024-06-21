@@ -21,10 +21,9 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [flow.steps, flow.initialStepID]);
 
-  const addMessageBlock = () => {
-    const newStepNumber = flow.steps.length + 1;
+  const addStep = (id?: string) => {
     const newStep: Step = {
-      id: `Step ${newStepNumber}`,
+      id: id || `Step ${flow.steps.length + 1}`,
       type: 'message',
       message: '',
       events: [],
@@ -38,22 +37,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
     return newStep.id;
   };
 
-  const addMessageWithID = (id: string) => {
-    const newStep: Step = {
-      id,
-      type: 'message',
-      message: '',
-      events: [],
-    };
-    const updatedSteps = [...flow.steps, newStep];
-    setFlow({
-      ...flow,
-      steps: updatedSteps,
-      initialStepID: updatedSteps[0].id, // Update initialStepID
-    });
-  };
-
-  const updateMessageBlock = (oldId: string, key: string, value: string) => {
+  const updateStep = (oldId: string, key: string, value: string) => {
     let updatedSteps = flow.steps.map((step) => {
       if (step.id === oldId) {
         return { ...step, [key]: value };
@@ -76,7 +60,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
     setFlow({ ...flow, steps: updatedSteps });
   };
 
-  const deleteMessageBlock = (id: string) => {
+  const deleteStep = (id: string) => {
     const updatedSteps = flow.steps.filter((step) => step.id !== id);
     setFlow({
       ...flow,
@@ -146,23 +130,17 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
     setFlow(importedFlow);
   };
 
-  const exportFlow = (): Flow => {
-    return flow;
-  };
-
   return (
     <FlowContext.Provider
       value={{
         flow,
-        addMessageBlock,
-        addMessageWithID,
-        updateMessageBlock,
-        deleteMessageBlock,
+        addStep,
+        updateStep,
+        deleteStep,
         updateEvent,
         deleteEvent,
         addEvent,
         importFlow,
-        exportFlow,
       }}
     >
       {children}

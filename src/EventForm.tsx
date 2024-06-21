@@ -36,7 +36,7 @@ const EventForm: React.FC<EventFormProps> = ({
     return null;
   }
 
-  const { flow, updateEvent, deleteEvent, addMessageWithID } = flowContext;
+  const { flow, updateEvent, deleteEvent, addStep } = flowContext;
 
   const handleSave = () => {
     updateEvent(stepId, event.id, intent, nextStepID);
@@ -44,7 +44,7 @@ const EventForm: React.FC<EventFormProps> = ({
 
   const handleAddMessage = (id: string) => {
     if (id && !flow.steps.find((step) => step.id === id)) {
-      addMessageWithID(id);
+      addStep(id);
     }
   };
 
