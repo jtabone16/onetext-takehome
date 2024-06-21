@@ -55,7 +55,7 @@ const FlowBuilder: React.FC = () => {
                         Export JSON
                     </button>
                     <button onClick={addMessageBlock} className="add-message-button p-2 bg-blue-500 text-white rounded">
-                        Add Message
+                        Add Step
                     </button>
                 </div>
                 {flow.steps.map((step, index) => (

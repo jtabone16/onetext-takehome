@@ -154,7 +154,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
 
             <button onClick={handleAddReply}
                     className="add-reply-button mt-2 p-1 bg-blue-500 text-white rounded self-end">
-                Add Reply
+                Add Event
             </button>
         </div>
     );

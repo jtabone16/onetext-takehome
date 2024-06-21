@@ -9,6 +9,7 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
 
     const [treeData, setTreeData] = useState<any[]>([]);
     const [translate, setTranslate] = useState({ x: 0, y: 0 });
+    const [tooltip, setTooltip] = useState<string | null>(null);
 
     useEffect(() => {
         if (flow) {
@@ -49,26 +50,68 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
         }
     }, [flow]);
 
-    const renderNode = ({ nodeDatum }: any) => (
-        <g onClick={() => scrollToStep(nodeDatum.name)}>
-            <rect
-                x="-60"
-                y="-30"
-                width="120"
-                height="60"
-                rx="30"
-                fill="#007AFF"
-                stroke="#007AFF"
-                strokeWidth="2"
-            />
-            <text fill="white" x="0" y="0" textAnchor="middle" fontSize="12" stroke="none">
-                {nodeDatum.name}
-            </text>
-        </g>
-    );
+    const handleMouseEnter = (tooltipText: string) => {
+        setTooltip(tooltipText);
+    };
+
+    const handleMouseLeave = () => {
+        setTooltip(null);
+    };
+
+    const renderNode = ({ nodeDatum }: any) => {
+        const relatedEvents = flow?.steps
+            .flatMap(step =>
+                step.events?.filter(event => event.nextStepID === nodeDatum.name).map(event => ({
+                    stepId: step.id,
+                    intent: event.intent,
+                })) || []
+            );
+
+        const tooltipText = relatedEvents && relatedEvents.length > 0
+            ? `Triggered by...\n\n${relatedEvents.map(e => `- "${e.intent}" in step "${e.stepId}"`).join('\n\n')}`
+            : nodeDatum.name === flow?.initialStepID
+                ? 'Initial step'
+                : '';
+
+        return (
+            <g
+                onClick={() => scrollToStep(nodeDatum.name)}
+                onMouseEnter={() => handleMouseEnter(tooltipText)}
+                onMouseLeave={handleMouseLeave}
+            >
+                <rect
+                    x="-60"
+                    y="-30"
+                    width="120"
+                    height="60"
+                    rx="30"
+                    fill="#007AFF"
+                    stroke="#007AFF"
+                    strokeWidth="2"
+                />
+                <foreignObject x="-60" y="-30" width="120" height="60">
+                    <div className="flex items-center justify-center h-full">
+                        <span className="text-white text-center text-sm truncate" title={nodeDatum.name}>
+                            {nodeDatum.name}
+                        </span>
+                    </div>
+                </foreignObject>
+            </g>
+        );
+    };
 
     return (
-        <div id="treeWrapper" style={{ width: '100%', height: '800px' }}>
+        <div id="treeWrapper" style={{ width: '100%', height: '800px', position: 'relative' }}>
+            {tooltip && (
+                <div
+                    className="absolute bg-black text-white text-sm rounded p-2"
+                    style={{ top: 0, left: '50%', transform: 'translateX(-50%)' }}
+                >
+                    {tooltip.split('\n').map((line, index) => (
+                        <div key={index} className={index === 1 ? 'mt-2' : index > 1 ? 'mt-1' : ''}>{line}</div>
+                    ))}
+                </div>
+            )}
             {treeData.length > 0 ? (
                 <Tree
                     data={treeData}
