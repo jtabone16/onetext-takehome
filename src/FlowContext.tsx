@@ -31,6 +31,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             steps: updatedSteps,
             initialStepID: updatedSteps[0].id // Update initialStepID
         });
+        return newStep.id;
     };
 
     const addMessageWithID = (id: string) => {

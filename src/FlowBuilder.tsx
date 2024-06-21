@@ -3,7 +3,7 @@ import { FlowContext } from './FlowContext';
 import MessageBlock from './MessageBlock';
 import FlowChart from './FlowChart';
 import ConfirmationModal from './ConfirmationModal';
-import {Flow} from "./types"; // Make sure to create or import this component
+import { Flow } from './types';
 
 const FlowBuilder: React.FC = () => {
     const flowContext = useContext(FlowContext);
@@ -25,12 +25,10 @@ const FlowBuilder: React.FC = () => {
             setImportedFlow(newImportedFlow);
             if (flow.steps.length) {
                 setIsModalOpen(true);
-            }
-            else{
+            } else {
                 importFlow(newImportedFlow);
                 setImportedFlow(null);
             }
-
         };
         if (event.target.files?.length) {
             fileReader.readAsText(event.target.files[0]);
@@ -68,6 +66,11 @@ const FlowBuilder: React.FC = () => {
         }
     };
 
+    const handleAddMessageBlock = () => {
+        const newStepId = addMessageBlock();
+        setTimeout(() => scrollToStep(newStepId), 100); // Scroll to the newly added step
+    };
+
     return (
         <div className="bg-gray-100 flex justify-center p-3 sm:p-14">
             {!!flow.steps.length && (
@@ -100,7 +103,7 @@ const FlowBuilder: React.FC = () => {
                         Export JSON
                     </button>
                     <button
-                        onClick={addMessageBlock}
+                        onClick={handleAddMessageBlock}
                         className="p-2 bg-blue-500 text-white rounded"
                     >
                         Add Step

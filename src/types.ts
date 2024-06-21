@@ -20,7 +20,7 @@ export interface Flow {
 
 export interface FlowContextProps {
     flow: Flow;
-    addMessageBlock: () => void;
+    addMessageBlock: () => string;
     addMessageWithID: (id: string) => void;
     updateMessageBlock: (oldId: string, key: string, value: string) => void;
     deleteMessageBlock: (id: string) => void;
