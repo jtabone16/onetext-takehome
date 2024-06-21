@@ -72,14 +72,9 @@ const FlowBuilder: React.FC = () => {
     };
 
     return (
-        <div className="bg-gray-100 flex justify-center p-3 sm:p-14">
-            {!!flow.steps.length && (
-                <div className="p-4 bg-white shadow rounded mr-4 w-1/2 justify-center relative hidden sm:flex">
-                    <FlowChart scrollToStep={scrollToStep} />
-                </div>
-            )}
-            <div className="flex flex-col space-y-4 w-full sm:w-1/2">
-                <div className="mb-1 flex justify-center">
+        <div className="bg-gray-100 flex flex-col items-center pb-3 px-3 sm:pb-14 sm:px-14">
+            <div className="sticky rounded top-0 bg-gray-100 p-2 w-full z-10 my-2">
+                <div className="flex justify-center">
                     <div className="mr-2">
                         <input
                             type="file"
@@ -109,16 +104,27 @@ const FlowBuilder: React.FC = () => {
                         Add Step
                     </button>
                 </div>
-                {!!flow.steps.length ? flow.steps.map((step, index) => (
-                    <div key={index} ref={el => (stepRefs.current[step.id] = el)} className="mb-4">
-                        <MessageBlock step={step} scrollToStep={scrollToStep} flow={flow} />
-                    </div>
-                )) : (
-                    <div className="flex items-center justify-center h-full text-gray-500">
-                        No steps yet. Add a step or import a flow to get started.
-                    </div>
-                )}
             </div>
+            {!flow.steps.length ? (
+                <div className="text-gray-500">
+                    No steps yet. Add a step or import a flow to get started.
+                </div>
+            ) : (
+            <div className="flex flex-col sm:flex-row w-full">
+                <div
+                    className="p-4 bg-white shadow rounded mr-4 w-full sm:w-1/2 justify-center relative hidden sm:flex">
+                    <FlowChart scrollToStep={scrollToStep} />
+                </div>
+                <div className="space-y-4 w-full sm:w-1/2">
+                    {flow.steps.map((step, index) => (
+                        <div key={index} ref={el => (stepRefs.current[step.id] = el)} className="mb-4">
+                            <MessageBlock step={step} scrollToStep={scrollToStep} flow={flow} />
+                        </div>
+                    ))
+                    }
+                </div>
+            </div>
+            )}
 
             {isModalOpen && (
                 <ConfirmationModal
