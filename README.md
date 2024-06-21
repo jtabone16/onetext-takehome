@@ -28,6 +28,8 @@ They can also export a flow to a JSON file. Try importing the included `pizza_te
 Users can also reset the flow by clicking the `Reset` button and save the flow to local browser storage by clicking the `Save` button.
 
 Lastly, as the user builds out a flow, they can see a visual representation of the flow on the left side of the screen.
+On hover of a node, the user will see a tooltip above the tree that details the step and what triggers it. On click of a node,
+we scroll to the corresponding step in the form view.
 
 ## Technologies Used
 - [Tailwind](https://github.com/tailwindlabs/tailwindcss)
