@@ -1,46 +1,69 @@
-# Getting Started with Create React App
+# Messaging Flow Builder
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the messaging flow builder! This tool is designed to help you create a messaging flow as per the
+requirements listed [here](https://gist.github.com/bluepnume/83ba618981b9ea6a09ff48bdcdd43e31#follow-up-exercise).
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+To get started, you will need to follow the steps below:
+- Clone the repository
+- Install the dependencies via `npm install`
+- Run the application via `npm start` (and admire how fast Vite is)
 
-### `npm start`
+## Usage
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The application is designed to allow users to create a messaging flow that consists of an `initialStepID` and `steps`. 
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Each `step` has an `id` (i.e. step name),`type` (note that we currently only support `message`type for steps), `message` (the message to be texted to the user),
+and `events`. 
 
-### `npm test`
+The `events` array contains events that can trigger a step in the flow. Note that an event cannot trigger its own step.
+Each event has a `type`  (note that we currently only support `reply` type for events),
+`intent` (i.e. a string that describes the intent of the user's reply), and a 
+`nextStepID` (i.e. the step that should be triggered if the user's reply matches the intent).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+That being said, users can either build out flows manually by clicking `Add Step` and `Add Event` buttons or by importing a JSON file that contains the flow.
+They can also export a flow to a JSON file. Try importing the included `pizza_test_values.json` :)
 
-### `npm run build`
+Lastly, as the user builds out a flow, they can see a visual representation of the flow on the left side of the screen.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Technologies Used
+- [Tailwind](https://github.com/tailwindlabs/tailwindcss)
+- [Vite](https://github.com/vitejs/vite)
+- [React](https://github.com/facebook/react)
+- [HeroIcons](https://github.com/tailwindlabs/heroicons)
+- [React D3 Tree](https://github.com/bkrem/react-d3-tree)
+- [React-select](https://github.com/JedWatson/react-select)
+- [Typescript](https://github.com/microsoft/TypeScript)
+- [Uuid](https://github.com/uuidjs/uuid)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Future Improvements
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Oh do I have a lot of ideas for this project! Here are a few:
 
-### `npm run eject`
+- Add support for different step and event types. Maybe phone calls and using a touch tone pad?
+- Light/dark mode
+- More accessibility features i.e. keyboard navigation, screen reader support, color contrast, etc
+- More robust validation and error handling
+- Testing with RTL
+- Build out component library with Radix-UI (or something similar, free accessability out of the box!) and Storybook for better reusability. Leverage their visual regression testing and a11y plugins.
+- Leverage a UI library like Tailwind UI, Chakra UI or Material UI for more consistent styling. Or just build components from scratch via Radix-UI.
+- Add more animations and transitions to make the UI more engaging and snappier e.g when saving steps or events on blur, importing a flow, etc
+- Preview mode to test a flow in real time
+- Ability to search and filter steps and events
+- More robust validation and error handling e.g. if user imports a faulty JSON eg steps with the same name
+- Better tooltips on hover of tree nodes, was having trouble rendering tooltips with React D3 Tree
+- Add a "Save" button to save the flow to local storage
+- Add a "Reset" button to clear the flow
+- Pick a better color scheme, I do have some design chops, but I wanted to focus on functionality and UX first and foremost. Working with OneText brand colors would be fun!
+- Indicate that a step or event is being hovered over in the tree/builder view
+- Indicate that a step or event is being hovered over in the form view
+- Indicate whether a step is "incomplete" i.e. missing an event that triggers it. Similarly, if an event is missing a nextStepID
+- Implement a true no-code drag and drop interface for building out flows. Less typing, more clicking when dealing with often used steps and events
+- I could've made the components a bit more testable by breaking them down into smaller, testable components. I was trying to keep the number of components to a minimum to reduce complexity, but I could've done a better job of this for sure.  
+ However, given the time constraints, I wanted to focus on functionality and UX first and foremost. Even added a couple features that weren't in the requirements :)
+- Create more CSS classes for reusability and to keep the codebase DRY. Had some at first, but decided to inline styles for simplicity and speed of development.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Conclusion
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+I had a lot of fun building this project! I hope you enjoy using it as much as I enjoyed building it. I look forward to hearing your feedback and suggestions for improvements. Feel free to reach out to me at [my email](mailto:jtabone16@gmail.com) or [LinkedIn](https://www.linkedin.com/in/jtabone16/). Thanks for the opportunity!
