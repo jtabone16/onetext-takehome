@@ -69,15 +69,15 @@ const FlowBuilder: React.FC = () => {
     };
 
     return (
-        <div className="flow-builder">
+        <div className="bg-gray-100 flex justify-center p-3 sm:p-14">
             {!!flow.steps.length && (
-                <div className="flow-chart-container p-4 bg-white shadow rounded mr-4 w-1/2">
+                <div className="p-4 bg-white shadow rounded mr-4 w-1/2 justify-center relative hidden sm:flex">
                     <FlowChart scrollToStep={scrollToStep} />
                 </div>
             )}
-            <div className="message-block-container flex flex-col space-y-4 w-1/2 ">
-                <div className="controls mb-4 flex justify-center">
-                    <div className="mr-2 self-end">
+            <div className="flex flex-col space-y-4 w-full sm:w-1/2">
+                <div className="mb-1 flex justify-center">
+                    <div className="mr-2">
                         <input
                             type="file"
                             accept=".json"
@@ -87,7 +87,7 @@ const FlowBuilder: React.FC = () => {
                         />
                         <button
                             onClick={() => document?.getElementById('fileInput')?.click()}
-                            className="import-button p-2 bg-blue-500 text-white rounded"
+                            className="p-2 bg-blue-500 text-white rounded"
                         >
                             Import JSON
                         </button>
@@ -95,13 +95,13 @@ const FlowBuilder: React.FC = () => {
                     <button
                         disabled={!flow.steps.length}
                         onClick={handleExport}
-                        className={`export-button mr-2 p-2 bg-green-500 text-white rounded ${!flow.steps.length && 'opacity-80 cursor-not-allowed'}`}
+                        className={`p-2 bg-blue-500 mr-2 text-white rounded ${!flow.steps.length && 'opacity-80 cursor-not-allowed'}`}
                     >
                         Export JSON
                     </button>
                     <button
                         onClick={addMessageBlock}
-                        className="add-message-button p-2 bg-blue-500 text-white rounded"
+                        className="p-2 bg-blue-500 text-white rounded"
                     >
                         Add Step
                     </button>

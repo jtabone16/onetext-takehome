@@ -77,7 +77,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ event, stepId, scrollToStep }) =>
     };
 
     return (
-        <div className="reply-form mt-2 bubble bubble-left relative">
+        <div className="bubble bubble-left">
             <label className="text-sm font-bold mb-1 text-black">When...</label>
             <input
                 type="text"

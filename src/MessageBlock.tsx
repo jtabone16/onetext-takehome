@@ -100,7 +100,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
         <div className="flex flex-col message-block p-4 mb-4 bg-white shadow rounded relative">
             <XCircleIcon
                 onClick={handleDelete}
-                className="x-circle-icon"
+                className="h-6 w-6 text-red-500 absolute -top-2.5 -right-2 cursor-pointer"
             />
             <ConfirmationModal
                 isOpen={isModalOpen}
@@ -126,7 +126,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
                 ))}
             </div>
             )}
-            <div className="bubble bubble-right relative">
+            <div className="bubble bubble-right">
                 <label className="text-sm font-bold mb-1">Step name</label>
                 <input
                     type="text"
@@ -153,7 +153,7 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
             </div>
 
             <button onClick={handleAddReply}
-                    className="add-reply-button mt-2 p-1 bg-blue-500 text-white rounded self-end">
+                    className="text-white rounded mt-2 p-2 bg-green-500 self-end">
                 Add Event
             </button>
         </div>

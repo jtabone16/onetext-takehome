@@ -2,36 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.flow-builder {
-  @apply p-14 bg-gray-100 flex justify-center;
-}
-
-.flow-chart-container {
-  @apply p-4 bg-white shadow rounded mr-4 flex justify-center relative;
-}
-
-.message-block-container {
-  @apply flex flex-col space-y-4;
-}
-
-.flow-chart {
-  @apply flex flex-col items-center;
-}
-
-.flow-chart-step {
-  @apply flex flex-col mb-4 items-center;
-}
-
-.flow-chart-replies {
-  @apply flex mt-2 space-x-2;
-}
-
-.event-line {
-  @apply h-1 bg-blue-500 my-1;
-  width: 2px;
-  margin: 0 auto;
-}
-
 .bubble {
   @apply p-4 rounded-lg max-w-xs relative border-4 text-black;
 }
@@ -41,32 +11,7 @@
 }
 
 .bubble-left {
-  @apply border-green-500 self-start ml-16;
-}
-
-.add-message-button,
-.export-button {
-  @apply mt-4 p-2 bg-blue-500 text-white rounded;
-}
-
-.reply-form {
-  @apply mt-2;
-}
-
-.reply-form input[type="text"] {
-  @apply border p-2 w-full mb-2 bg-transparent placeholder-opacity-50 text-black border-black;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.add-reply-button {
-  @apply mt-2 p-1 bg-green-500 text-white rounded;
-}
-
-.x-circle-icon {
-  @apply h-6 w-6 text-red-500 absolute -top-2.5 -right-2 cursor-pointer;
+  @apply border-green-500 self-start ml-16 mt-2;
 }
 
 /* Custom styles for react-select */
@@ -78,19 +23,10 @@
   @apply z-10;
 }
 
-.reply-form .react-select__control {
+.react-select__control {
   @apply border-none shadow-none bg-transparent;
 }
 
-.reply-form .react-select__menu {
+.react-select__menu {
   @apply z-10;
-}
-
-.reply-form input[type="text"]::placeholder {
-  color: rgba(0, 0, 0, 0.5); /* Adjusted for grey bubbles */
-}
-
-.bubble-right input[type="text"]::placeholder,
-.bubble-right textarea::placeholder {
-  color: rgba(255, 255, 255, 0.5); /* Adjusted for blue bubbles */
 }
