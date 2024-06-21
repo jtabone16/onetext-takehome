@@ -100,11 +100,10 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
     };
 
     return (
-        <div id="treeWrapper" style={{ width: '100%', height: '800px', position: 'relative' }}>
+        <div id="treeWrapper" className="w-full h-[800px] relative">
             {tooltip && (
                 <div
-                    className="absolute bg-black text-white text-sm rounded p-2"
-                    style={{ top: 0, left: '50%', transform: 'translateX(-50%)' }}
+                    className="absolute bg-black text-white text-sm rounded p-2 top-0 left-1/2 transform -translate-x-1/2"
                 >
                     {tooltip.split('\n').map((line, index) => (
                         <div key={index} className={index === 1 ? 'mt-2' : index > 1 ? 'mt-1' : ''}>{line}</div>

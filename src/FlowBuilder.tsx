@@ -83,7 +83,7 @@ const FlowBuilder: React.FC = () => {
                             accept=".json"
                             onChange={handleImport}
                             id="fileInput"
-                            style={{ display: 'none' }}
+                            className='hidden'
                         />
                         <button
                             onClick={() => document?.getElementById('fileInput')?.click()}
