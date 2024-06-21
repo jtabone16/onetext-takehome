@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Tree from 'react-d3-tree';
 import { FlowContext } from './FlowContext';
-import { Step, Event as EventType } from './types';
 
 const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scrollToStep }) => {
     const flowContext = useContext(FlowContext);
@@ -112,7 +111,7 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
                     ))}
                 </div>
             )}
-            {treeData.length > 0 ? (
+            {treeData.length > 0 && flow?.steps?.length ? (
                 <Tree
                     data={treeData}
                     renderCustomNodeElement={renderNode}
