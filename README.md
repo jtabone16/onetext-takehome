@@ -25,6 +25,8 @@ Each event has a `type`  (note that we currently only support `reply` type for e
 That being said, users can either build out flows manually by clicking `Add Step` and `Add Event` buttons or by importing a JSON file that contains the flow.
 They can also export a flow to a JSON file. Try importing the included `pizza_test_values.json` :)
 
+Users can also reset the flow by clicking the `Reset` button and save the flow to local browser storage by clicking the `Save` button.
+
 Lastly, as the user builds out a flow, they can see a visual representation of the flow on the left side of the screen.
 
 ## Technologies Used
@@ -53,8 +55,6 @@ Oh do I have a lot of ideas for this project! Here are a few:
 - Ability to search and filter steps and events
 - More robust validation and error handling e.g. if user imports a faulty JSON eg steps with the same name
 - Better tooltips on hover of tree nodes, was having trouble rendering tooltips with React D3 Tree
-- Add a "Save" button to save the flow to local storage
-- Add a "Reset" button to clear the flow
 - Pick a better color scheme, I do have some design chops, but I wanted to focus on functionality and UX first and foremost. Working with OneText brand colors would be fun!
 - Indicate that a step or event is being hovered over in the tree/builder view
 - Indicate that a step or event is being hovered over in the form view

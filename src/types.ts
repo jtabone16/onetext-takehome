@@ -24,12 +24,14 @@ export interface FlowContextProps {
   updateStep: (oldId: string, key: string, value: string) => void;
   deleteStep: (id: string) => void;
   updateEvent: (
-    stepId: string,
-    eventId: string,
-    newIntent: string,
-    nextStepID: string,
+      stepId: string,
+      eventId: string,
+      newIntent: string,
+      nextStepID: string,
   ) => void;
   deleteEvent: (stepId: string, eventId: string) => void;
   addEvent: (stepId: string) => void;
   importFlow: (importedFlow: Flow) => void;
+  resetFlow: () => void;
+  saveFlow: () => void;
 }

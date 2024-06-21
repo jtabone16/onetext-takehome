@@ -8,47 +8,28 @@ interface ConfirmationModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   onExport?: () => void;
+  confirmButtonColor?: string;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
-  isOpen,
-  title,
-  message,
-  onConfirm,
-  onCancel,
-  content,
-  onExport,
-}) => {
+const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, message, onConfirm, onCancel, onExport, content, confirmButtonColor = 'bg-red-500' }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-black opacity-50 absolute inset-0"></div>
-      <div className="bg-white p-6 rounded shadow-lg z-10 max-w-md mx-auto">
-        <h2 className="text-xl font-bold mb-4">{title}</h2>
-        <p className="mb-4">{message}</p>
-        <div className="mb-4">{content}</div>
-        <div className="mb-4 flex justify-between">
-          {onExport && (
-            <button
-              onClick={onExport}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              Export
-            </button>
-          )}
-          <button onClick={onCancel} className="px-4 py-2 bg-gray-300 rounded">
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-red-500 text-white rounded"
-          >
-            Confirm
-          </button>
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="bg-black opacity-50 absolute inset-0"></div>
+        <div className="bg-white p-6 rounded shadow-lg z-10 max-w-md mx-auto">
+          <h2 className="text-xl font-bold mb-4">{title}</h2>
+          <p className="mb-4">{message}</p>
+          <div className="mb-4">
+            {content}
+          </div>
+          <div className="flex justify-end space-x-2">
+            {onExport && <button onClick={onExport} className="px-4 py-2 bg-green-500 text-white rounded">Export</button>}
+            <button onClick={onCancel} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+            <button onClick={onConfirm} className={`px-4 py-2 ${confirmButtonColor} text-white rounded`}>Confirm</button>
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 
