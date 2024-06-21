@@ -22,11 +22,3 @@
 .react-select__menu {
   @apply z-10;
 }
-
-.react-select__control {
-  @apply border-none shadow-none bg-transparent;
-}
-
-.react-select__menu {
-  @apply z-10;
-}
