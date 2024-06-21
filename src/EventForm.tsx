@@ -26,7 +26,7 @@ const EventForm: React.FC<EventFormProps> = ({ event, stepId, scrollToStep }) =>
         if (flowContext) {
             flowContext.updateEvent(stepId, event.id, intent, nextStepID);
         }
-    }, [nextStepID]);
+    }, [stepId, event.id, intent, nextStepID, flowContext]);
 
     if (!flowContext) {
         return null;

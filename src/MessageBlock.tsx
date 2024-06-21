@@ -42,12 +42,12 @@ const MessageBlock: React.FC<MessageBlockProps> = ({ step, scrollToStep, flow })
     useEffect(() => {
         setStepName(step.id);
         latestStepName.current = step.id;
-    }, [step.id]);
+    }, [step.id, latestStepName]);
 
     useEffect(() => {
         setMessage(step.message);
         latestMessage.current = step.message;
-    }, [step.message]);
+    }, [step.message, latestMessage]);
 
     const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 

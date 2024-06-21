@@ -47,7 +47,11 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
                 }
             }
         }
-    }, [flow]);
+    }, [
+        flow?.steps,
+        flow?.
+        initialStepID,
+    ]);
 
     const handleMouseEnter = (tooltipText: string) => {
         setTooltip(tooltipText);

@@ -15,7 +15,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (flow.steps.length > 0 && flow.initialStepID !== flow.steps[0].id) {
             setFlow({ ...flow, initialStepID: flow.steps[0].id });
         }
-    }, [flow.steps]);
+    }, [flow.steps, flow.initialStepID]);
 
     const addMessageBlock = () => {
         const newStepNumber = flow.steps.length + 1;
