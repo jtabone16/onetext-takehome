@@ -7,9 +7,10 @@ interface ConfirmationModalProps {
     content?: JSX.Element;
     onConfirm: () => void;
     onCancel: () => void;
+    onExport?: () => void;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, message, onConfirm, onCancel, content }) => {
+const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, message, onConfirm, onCancel, content, onExport }) => {
     if (!isOpen) return null;
 
     return (
@@ -21,7 +22,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, me
                 <div className="mb-4">
                     {content}
                 </div>
-                <div className="flex justify-end space-x-2">
+                <div className="mb-4 flex justify-between">
+                    {onExport && <button onClick={onExport} className="px-4 py-2 bg-blue-500 text-white rounded">Export</button>}
                     <button onClick={onCancel} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
                     <button onClick={onConfirm} className="px-4 py-2 bg-red-500 text-white rounded">Delete</button>
                 </div>

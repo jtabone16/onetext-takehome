@@ -111,7 +111,7 @@ const FlowChart: React.FC<{ scrollToStep: (stepId?: string) => void }> = ({ scro
                     ))}
                 </div>
             )}
-            {treeData.length > 0 && flow?.steps?.length ? (
+            {treeData.length > 0 ? (
                 <Tree
                     data={treeData}
                     renderCustomNodeElement={renderNode}

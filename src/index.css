@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .flow-builder {
-  @apply p-14 bg-gray-100 flex;
+  @apply p-14 bg-gray-100 flex justify-center;
 }
 
 .flow-chart-container {
