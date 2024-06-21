@@ -6,13 +6,13 @@ import './index.css';
 const container = document.getElementById('root');
 
 if (container) {
-    const root = createRoot(container);
+  const root = createRoot(container);
 
-    root.render(
-        <React.StrictMode>
-            <App />
-        </React.StrictMode>
-    );
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  );
 } else {
-    console.error('Failed to find the root element to mount the React app.');
+  console.error('Failed to find the root element to mount the React app.');
 }
