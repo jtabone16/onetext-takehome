@@ -176,10 +176,10 @@ const FlowBuilder: React.FC = () => {
                 }
                 message={
                   modalType === 'import'
-                      ? 'You are about to import a new flow, which will overwrite the current flow. Would you like to export the current flow before importing?'
+                      ? 'You are about to import a new flow, which will overwrite the current flow. Click Export to save the current flow before importing.'
                       : modalType === 'reset'
-                          ? 'Are you sure you want to reset the current flow? This action cannot be undone.'
-                          : 'Save the current flow to local storage?'
+                          ? 'Are you sure you want to reset the current flow? This action cannot be undone. Click Export to save the current flow before resetting.'
+                          : 'Save the current flow to local storage? You can also export it by clicking the Export button'
                 }
                 onConfirm={
                   modalType === 'import'
